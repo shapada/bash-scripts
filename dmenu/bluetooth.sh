@@ -1,20 +1,21 @@
-#!/bin/bash
-#             __ _       _     _            _              _   _
-#  _ __ ___  / _(_)     | |__ | |_   _  ___| |_ ___   ___ | |_| |__
-# | '__/ _ \| |_| |_____| '_ \| | | | |/ _ \ __/ _ \ / _ \| __| '_ \
-# | | | (_) |  _| |_____| |_) | | |_| |  __/ || (_) | (_) | |_| | | |
-# |_|  \___/|_| |_|     |_.__/|_|\__,_|\___|\__\___/ \___/ \__|_| |_|
+#!/usr/bin/env bash
+#      _                                  _     _            _              _    _
+#   __| |_ __ ___   ___ _ __  _   _      | |__ | |_   _  ___| |_ ___   ___ | |_ | |__
+#  / _` | '_ ` _ \ / _ \ '_ \| | | |_____| '_ \| | | | |/ _ \ __/ _ \ / _ \| __|| '_ \
+# | (_| | | | | | |  __/ | | | |_| |_____| |_) | | |_| |  __/ || (_) | (_) | |_ | | | |
+#  \__,_|_| |_| |_|\___|_| |_|\__,_|     |_.__/|_|\__,_|\___|\__\___/ \___/ \__||_| |_|
 #
 # Author: Nick Clyde (clydedroid)
+# dmenu support by: Layerex
 #
-# A script that generates a rofi menu that uses bluetoothctl to
+# A script that generates a dmenu menu that uses bluetoothctl to
 # connect to bluetooth devices and display status info.
 #
 # Inspired by networkmanager-dmenu (https://github.com/firecat53/networkmanager-dmenu)
 # Thanks to x70b1 (https://github.com/polybar/polybar-scripts/tree/master/polybar-scripts/system-bluetooth-bluetoothctl)
 #
 # Depends on:
-#   Arch repositories: rofi, bluez-utils (contains bluetoothctl)
+#   Arch repositories: dmenu, bluez-utils (contains bluetoothctl)
 
 # Checks if bluetooth controller is powered on
 power_on() {
@@ -205,8 +206,8 @@ device_menu() {
     trusted=$(device_trusted $mac)
     options="$connected\n$paired\n$trusted"
 
-    # Open rofi menu, read chosen option
-    chosen="$(echo -e "$options" | $rofi_command "$device_name")"
+    # Open dmenu menu, read chosen option
+    chosen="$(echo -e "$options" | $dmenu_command "$device_name")"
 
     # Match chosen option to command
     case $chosen in
@@ -225,7 +226,7 @@ device_menu() {
     esac
 }
 
-# Opens a rofi menu with current bluetooth status and options to connect
+# Opens a dmenu menu with current bluetooth status and options to connect
 show_menu() {
     # Get menu options
     if power_on; then
@@ -241,15 +242,15 @@ show_menu() {
         discoverable=$(discoverable_on)
         divider="---------"
 
-        # Options passed to rofi
+        # Options passed to dmenu 
         options="$devices\n$divider\n$power\n$scan\n$pairable\n$discoverable"
     else
         power="Power: off"
         options="$power"
     fi
 
-    # Open rofi menu, read chosen option
-    chosen="$(echo -e "$options" | $rofi_command "Bluetooth")"
+    # Open dmenu menu, read chosen option
+    chosen="$(echo -e "$options" | $dmenu_command "Bluetooth")"
 
     # Match chosen option to command
     case $chosen in
@@ -276,8 +277,8 @@ show_menu() {
     esac
 }
 
-# Rofi command to pipe into, can add any options here
-rofi_command="rofi -dmenu -no-fixed-num-lines -yoffset -100 -i -p"
+# dmenu command to pipe into, can add any options here
+dmenu_command="dmenu -i -p"
 
 case "$1" in
     --status)

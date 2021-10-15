@@ -1,0 +1,6 @@
+keycode 0xffe7 = Alt_L
+keycode 0xffeb = Super_L
+remove mod1 =  0xffe7
+remove mod4 =  0xffeb 
+add mod1 = Super_L
+add mod4 = Alt_L
