@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+idevicepair pair
+ifuse /media/iphone
