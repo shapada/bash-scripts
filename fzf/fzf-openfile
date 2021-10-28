@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+xdg-open "$(rg --no-messages --files ~/Documents ~/Code ~/Downloads \
+    -g "!{*.srt,*.rar,*.txt,*.zip,*.nfo,*.git}" | rofi -threads 0 \
+    -theme-str "#window { width: 900;}" \
+    -dmenu -sort -sorting-method fzf -i -p "Find")"

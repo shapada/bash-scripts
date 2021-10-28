@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+launchapp=$(IFS=':'; \
+  for p in ${PATH}; \
+  do find -L "${p}" -type f -executable -print 2> /dev/null; done \
+  | fzf --header="Select application to launch from PATH:") \
+  && bash -c "${launchapp}"

@@ -183,7 +183,7 @@ elif [ "$ChosenMenu" = "$MenuEdit" ]; then
         printf '%s' "$PassList" | dmenu -i -l 30 -p "Select entry to edit:"
     )
 
-    $TERMINAL -e pass edit "$ChosenPass"
+    "${TERMINAL}" --hold -e pass edit "${ChosenPass}"
 
 # Delete an entry:
 elif [ "$ChosenMenu" = "$MenuDelete" ]; then

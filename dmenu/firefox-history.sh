@@ -15,38 +15,44 @@ IFS='|'
 HISTORY=$(sqlite3 "${TMP_PLACES}" "${QUERY}" | dmenu -p "Firefox" -l 100 )
 
 read -ra ADDR <<< "${HISTORY}"
-if  [[ "${ADDR[1]}" == "" ]]; then
-    IDENTIFIER=$(echo "${ADDR[0]}" | awk '{print $1;}')
-    SEARCH_TERMS=$(echo "${ADDR[0]}" |  sed 's/[^ ]* *//')
 
-    case "$IDENTIFIER" in
-        "archwiki" | "aw")
-            URL="https://wiki.archlinux.org/index.php?search=$SEARCH_TERMS"
+echo ${ADDR[0]}
+echo ${ADDR[1]}
+
+if [[ ! -z "${ADDR}" ]]; then
+    if  [[ "${ADDR[1]}" == "" ]]; then
+        IDENTIFIER=$(echo "${ADDR[0]}" | awk '{print $1;}')
+        SEARCH_TERMS=$(echo "${ADDR[0]}" |  sed 's/[^ ]* *//')
+
+        case "$IDENTIFIER" in
+            "archwiki" | "aw")
+                URL="https://wiki.archlinux.org/index.php?search=$SEARCH_TERMS"
+                ;;
+            "ultimateguitar" | "ug")
+                URL="https://www.ultimate-guitar.com/search.php?search_type=title&value=$SEARCH_TERMS"
+                ;;
+            "youtube" | "yt")
+                URL="https://www.youtube.com/results?search_query=$SEARCH_TERMS"
+                ;;
+            "github" | "gh")
+                URL="https://github.com/search?q=$SEARCH_TERMS"
+                ;;
+            "wordpress" | "wp")
+                URL='https://developer.wordpress.org/?s=$SEARCH_TERMS';
+                ;;
+            *)
+            if ! [[ "$IDENTIFIER" == http* ]]; then
+                URL="https://www.google.com/search?q=${HISTORY}";
+            else
+                URL="${ADDR[0]}"
+            fi
             ;;
-        "ultimateguitar" | "ug")
-            URL="https://www.ultimate-guitar.com/search.php?search_type=title&value=$SEARCH_TERMS"
-            ;;
-        "youtube" | "yt")
-            URL="https://www.youtube.com/results?search_query=$SEARCH_TERMS"
-            ;;
-        "github" | "gh")
-            URL="https://github.com/search?q=$SEARCH_TERMS"
-            ;;
-        "wordpress" | "wp")
-            URL='https://developer.wordpress.org/?s=$SEARCH_TERMS';
-            ;;
-        *)
-        if ! [[ "$IDENTIFIER" == http* ]]; then
-            URL="https://www.google.com/search?q=${HISTORY}";
-        else
-            URL="${ADDR[0]}"
-        fi
-        ;;
-    esac
-else
-    URL="${ADDR[1]}"
+        esac
+    else
+        URL="${ADDR[1]}"
+    fi
+
+    firefox "$URL"
 fi
-
-firefox "$URL"
 
 rm "${TMP_PLACES}"

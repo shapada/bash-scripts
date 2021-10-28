@@ -1,0 +1,10 @@
+# Shell application launcher
+#!/usr/bin/env bash
+launchapp=$(IFS=':'; \
+  for p in ${PATH}; \
+  do find -L "${p}" -type f -executable -print 2> /dev/null; done \
+  | fzf --header="Select application to launch from PATH:" \
+    --multi=0 \
+    --exact \
+    --height="50%")Q \
+  && bash -c "${launchapp}"

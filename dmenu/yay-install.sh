@@ -8,9 +8,5 @@ package=$(echo -n '' | dmenu -p "YAY Search:")
 
 # open selected manual with terminal
 if [[ ! -z "$package" ]]; then
-    eval $($terminal -hold -T "YAY" -e yay "$package")
-    exit;
+    $terminal -hold -e zsh -c 'tmux new-session -c "yay $package" | fzf'
 fi
-
-exit 0
-

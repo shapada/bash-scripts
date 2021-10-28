@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 
 # terminal to open manual
-terminal="terminal"
+terminal="urxvt"
 
+scripts_dir=${SCRIPTS_DIR:-$HOME/.local/scripts}
 
-# list all manuals
-package=$(echo -n '' | dmenu -p "YAY Search:")
+input=$(find $SCRIPTS -type f \( -iname "*" ! -iname ".*" \) | sort | dmenu -l 100 -i -p "Run Script")
 
-# open selected manual with terminal
-if [[ ! -z "$package" ]]; then
-    eval $($terminal -hold -T "YAY" -e yay "$package")
-    exit;
+read -ra input_cmd <<< "${input}"
+
+if [ ! -z "${input_cmd}" ];  then
+    if [ ! -z "${input_cmd[1]}" ]; then
+        cmd="${input_cmd[@]}"
+    else
+        cmd="${input_cmd}"
+    fi
+
+    $terminal --hold -e zsh -c "${cmd}"
 fi
-
-exit 0
-
