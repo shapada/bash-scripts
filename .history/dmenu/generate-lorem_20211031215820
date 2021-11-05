@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+#lorem_cmd=$(echo '' | dmenu -i -p "Lorem Generator")
+
+user_input=$( echo -e "Words\nSentences\nParagraphs" | dmenu -i -p "Lorem Generator")
+echo $user_input
+case ${user_input} in
+    Words )
+        lorem_cmd=$(lorem -w "${numberOfGenerations}")
+    ;;
+    Sentences )
+        lorem_cmd=$(lorem -s "${numberOfGenerations}")
+    ;;
+    Paragraphs )
+        lorem_cmd=$(lorem -p "${numberOfGenerations}")
+    ;;
+    * )
+        options="lorem -w 25"
+    ;;
+esac
+
+
+# if [[ ! -z "${generationType}" ]]; then
+
+#     rofi -dmenu -p ""
+#     generationType=${user_input[1]}
+#     numberOfGenerations=${user_input[0]}
+
+#     case ${generationType} in
+#         w|word )
+#             options="-w ${numberOfGenerations}"
+#         ;;
+#         s|stentence )
+#             options="-s ${numberOfGenerations}"
+#         ;;
+#         p|paragraph )
+#             options="-p ${option_value}"
+#         ;;
+#         *
+#            options="-w 25"
+#         ;;
+#     esac
+
+#     lorem "${options}" | xclip -in
+# fi

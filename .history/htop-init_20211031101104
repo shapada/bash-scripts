@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+$TERMINAL -name htopterm -e zsh -ic "htop && read"

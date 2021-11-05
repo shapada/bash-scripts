@@ -28,6 +28,32 @@ cat <<EOF
 └───────┘
 EOF
 }
+
+external_below() {
+cat <<EOF
+┏━━━━━──┐             External monitor ($ext)
+┃       │             below internal monitor ($internal)
+┃       │
+└───────┘
+┏━━━━┱
+┃    ┃
+┡━━━━┛
+EOF
+}
+
+external_above() {
+cat <<EOF
+
+┏━━━━┱
+┃    ┃
+┡━━━━┛
+┏━━━━━──┐             External monitor ($ext)
+┃       │             above internal monitor ($internal)
+┃       │
+└───────┘
+EOF
+}
+
 external_right() {
 #cat <<EOF
 #┌───────┐ ┌────┐
@@ -76,6 +102,10 @@ echo -ne '\0'
 external_left
 echo -ne '\0'
 external_on_top
+echo -ne '\0'
+external_above
+echo -ne '\0'
+external_below
 echo -ne '\0'
 internal_off
 }

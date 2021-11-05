@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+FIREFOX_PROFILE="r0c7v8e7.default-release"
+
+PROFILE_DB="$HOME/.mozilla/firefox/${FIREFOX_PROFILE}/places.sqlite"
+TMP_PLACES="/tmp/places"
+
+# Avoid db lock
+cp "${PROFILE_DB}" "${TMP_PLACES}"
+
+QUERY="select distinct p.title, p.url from moz_places as p, moz_historyvisits as h, moz_bookmarks as b where substr(h.visit_date, 0, 11) >= strftime('%s', date('now') - 30) and p.id == h.place_id and p.title != '' order by h.visit_date DESC;"
+
+IFS='|'
+
+query=$(sqlite3 "${TMP_PLACES}" "${QUERY}" | dmenu -p "Firefox" )
+
+if [[ ! -z "${query}" ]]; then
+    cat query
+fi
+
+echo $query
+
+firstWord = ${query##*|}
+
+echo "$firstWord"
+
+read -ra ADDR <<< "${query}"
+
+echo ${ADDR[0]}
+echo ${ADDR[1]}
+
+if [[ ! -z "${ADDR}" ]]; then
+    if  [[ "${ADDR[1]}" == "" ]]; then
+        IDENTIFIER=$(echo "${ADDR[0]}" | awk '{print $1;}')
+        SEARCH_TERMS=$(echo "${ADDR[0]}" |  sed 's/[^ ]* *//')
+
+        case "$IDENTIFIER" in
+            "archwiki" | "aw")
+                URL="https://wiki.archlinux.org/index.php?search=$SEARCH_TERMS"
+                ;;
+            "ultimateguitar" | "ug")
+                URL="https://www.ultimate-guitar.com/search.php?search_type=title&value=$SEARCH_TERMS"
+                ;;
+            "youtube" | "yt")
+                URL="https://www.youtube.com/results?search_query=$SEARCH_TERMS"
+                ;;
+            "github" | "gh")
+                URL="https://github.com/search?q=$SEARCH_TERMS"
+                ;;
+            "wordpress" | "wp")
+                URL='https://developer.wordpress.org/?s=$SEARCH_TERMS';
+                ;;
+            *)
+            if ! [[ "$IDENTIFIER" == http* ]]; then
+                URL="https://www.google.com/search?q=${HISTORY}";
+            else
+                URL="${ADDR[0]}"
+            fi
+            ;;
+        esac
+    else
+        URL="${ADDR[1]}"
+    fi
+
+    firefox "$URL"
+fi
+
+rm "${TMP_PLACES}"

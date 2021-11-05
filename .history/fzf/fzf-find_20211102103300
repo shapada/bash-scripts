@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+terminal=${TERMINAL:-urxvtc}
+$terminal -name quickfind -e zsh -c "tmux new-session -A -s dummy";
+$(man -k . | dmenu $prompt)

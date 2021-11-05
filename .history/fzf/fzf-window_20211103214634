@@ -1,0 +1,5 @@
+#!/bin/sh
+
+terminal=${TERMINAL:-/bin/urxvtc}
+
+$TERMINAL -hold -e zsh -ci 'source ~/.zshrc && "$1"'

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+$(man -k . | dmenu $prompt | awk '{print $1}')

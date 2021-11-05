@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+search_query=$(rofi -dmenu -p "YAY Search")
+eval $(terminal -T "YAY | Search and Install Packages" -e "yay ${search_query}")
