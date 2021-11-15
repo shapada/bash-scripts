@@ -1,7 +1,0 @@
-1636047368.973481 client started (79461): version 3.2a, socket /bin/tmux, protocol 8
-1636047368.973560 on Linux 5.13.19-2-MANJARO #1 SMP PREEMPT Sun Sep 19 21:31:53 UTC 2021
-1636047368.973577 using libevent 2.1.12-stable (poll); ncurses 6.2
-1636047368.973629 flags are 0x10010000
-1636047368.973643 socket is /bin/tmux
-1636047368.973673 trying connect
-1636047368.973712 connect failed: Permission denied

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#selected_cmd=$( cat ~/.zsh_history | cut -d';' -f2 | rofi -dmenu -sidebar-mode -i -p "Search")
+cmd=$(urxvtc --hold -e zsh -ic 'cat ~/.zsh_history | cut -d";" -f2 | fzf')
+
+echo $cmd
+
+# if [ -n "$selected_cmd" ]; the
+
+#     urxvtc --hold -e zsh -c "$selected_cmd"
+# fi
+

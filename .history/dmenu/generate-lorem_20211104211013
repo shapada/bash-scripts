@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#lorem_cmd=$(echo '' | dmenu -i -p "Lorem Generator")
+
+cmd_options=$( rofi -dmenu -p "Generate Lorem Ipsum" )
+
+if [[ ! -z == "$cmd_options" ]]; then
+
+    case ${cmd_options} in
+        Words )
+            options=$(lorem -w "${numberOfGenerations}")
+        ;;
+        Sentences )
+            options=$(lorem -s "${numberOfGenerations}")
+        ;;
+        Paragraphs )
+            options=$(-p "${numberOfGenerations}")
+        ;;
+        * )
+            lorem=$(lorem -w 25)
+        ;;
+    esac
+
+    lorem  | xclip -in
+
+fi
+
+

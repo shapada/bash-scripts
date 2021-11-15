@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+source ~/.zshrc
+
+if [[ -z "$@" ]]; then
+   echo "$(fasd -t -R | awk '{print $2}')"
+else
+   echo $@
+fi
+
+
+

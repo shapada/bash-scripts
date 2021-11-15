@@ -1,0 +1,5 @@
+#!/bin/sh
+
+terminal=${TERMINAL:-/bin/alacritty}
+
+$TERMINAL -hold -e zsh -c '"$1"'

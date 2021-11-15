@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+FILE_NAME=$(rofi -dmenu -p "Save Clipboard As")
+CLIPS_DIR=$(~/local/xclips/)
+
+if [ -n "$FILE_NAME" ]; then
+    mkdir "$CLIPS_DIR"
+    xclip -o > "${CLIPS_DIR}/${FILE_NAME}"
+fi

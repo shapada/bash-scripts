@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+search_term=$(rofi -dmenu -l 0 -p "YAY Search")
+
+if [[ -z "$search_term"]]; then
+    eval $(terminal -T "YAY | Search and Install Packages" -hold -e yay "${search_term}"); exit 0
+fi
+
+kill -25 $PPID

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+DESTROOTDEV="93088ae6-da9b-4a68-bf36-45fa20b95f19"
+DESTLUKSCONT="e5cf553d-9489-4b11-8cd0-89f28144577f"
+DESTBOOTDEV="887dea5d-b7ce-48f3-b24b-ef116d876010"
+#DESTEFIDEV="D759-344B"
+GRUBTARGET="$(blkid -U ${DESTBOOTDEV})"
+
+BACKUPMNTS="/. /home/. /boot/."
+
+TARGET="/mnt"
+
+mount UUID=${DESTROOTDEV} ${TARGET} -osubvol=@,noatime,space_cache || exit
+mkdir -p /mnt/home /mnt/boot
+mount UUID=${DESTROOTDEV} ${TARGET}/home -osubvol=@home,noatime,space_cache || exit
+mount UUID=${DESTBOOTDEV} ${TARGET}/boot || exit
+#mount UUID=${DESTEFIDEV} ${TARGET}/boot/efi || exit
+
+for dir in ${BACKUPMNTS} ; do
+  printf "Backing up %b\n" "${dir}"
+  rsync -avxHAX --delete ${dir} ${TARGET}${dir}
+done
+
+cat << EOF > ${TARGET}/etc/crypttab
+cryptos		UUID=${DESTLUKSCONT}		none	luks
+EOF
+
+cat << EOF > ${TARGET}/etc/fstab
+/dev/mapper/cryptos	/		btrfs	defaults,noatime,space_cache,subvol=@	0	0
+UUID=${DESTBOOTDEV}		/boot		btrfs	defaults,noatime		0	0
+/dev/mapper/cryptos	/home		btrfs	defaults,noatime,space_cache,subvol=@home	0	0
+EOF
+
+for dir in proc sys dev run; do
+  mount -o bind /${dir} ${TARGET}/${dir} || exit
+done
+
+chroot ${TARGET} update-initramfs -k all -c
+chroot ${TARGET} update-grub
+chroot ${TARGET} grub-install ${GRUBTARGET}
+#chroot ${TARGET} grub-install -d /usr/lib/grub/i386-pc/ ${GRUBTARGET}
+#chroot ${TARGET} grub-install -d /usr/lib/grub/x86_64-efi/ ${GRUBTARGET}
+
+
+umount -R /mnt

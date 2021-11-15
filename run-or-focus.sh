@@ -10,6 +10,8 @@ case "$1" in
         count=`xdotool search --limit 1 --name "$2" | wc -l`
         i3wm_criteria="title";;
 esac
+
+echo $3
 if [ "$count" -eq 0 ]; then
     $3
 else

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+xhamster="https://xhamster.com/search/"
+pornhub="https://www.pornhub.com/video/search?search="
+xnxx="https://www.xnxx.com/search/"
+xvideos="https://www.xvideos.com/?k="
+yahoo="https://login.yahoo.com/manage_account?activity=mail-direct"
+google="https://google.com/search?q="
+
+
+search_term=$(cat "$SEARCH_HISTORY" | rofi -dmenu -i -p "Search")
+
+
+if [ -n "$search_term" ]; then
+    identifier=$( echo "$search_term" | cut -f 1 -d ' ')
+    query=$( echo "$search_term" | cut -f 1 -d ' ' --complement)
+
+    case "$identifier" in
+        (xh)  url="${xhamster}${query}";;
+        (ph)  url="${pornhub}${query}";;
+        (xv)  url="${xvideos}${query}";;
+        (ym)  url="${yahoo}";;
+        (*)   url="${google}${query}";;
+    esac
+
+    firefox --private-window  "$url" &
+fi
