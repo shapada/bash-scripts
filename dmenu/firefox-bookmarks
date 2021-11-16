@@ -9,14 +9,10 @@ TMP_PLACES="/tmp/places"
 
 # Avoid db lock
 cp "${PROFILE_DB}" "${TMP_PLACES}"
-ENTRIES=$(sqlite3 "${TMP_PLACES}" "${SQL}" | dmenu -p "Firefox" )
+=
 
-read -ra ADDR <<<"${ENTRIES}"
-echo "${ADDR}"
-
-for i in "${ADDR[@]}"; do
-	URL="${i}"
-done
+read -ra $(sqlite3 "${TMP_PLACES}" "${SQL}" | dmenu -p "Firefox" ) <<< "${ENTRIES}"
+URL="echo ${ADDR} | awk -F: '{print $NF}'"
 
 if [[ ${ADDR[0]} == "" ]]; then
 	rm "${TMP_PLACES}"
