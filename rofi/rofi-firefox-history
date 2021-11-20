@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+firefox_profile="r0c7v8e7.default-release"
+
+profile_db="$HOME/.mozilla/firefox/${firefox_profile}/places.sqlite"
+tmp_places="/tmp/places"
+
+# Avoid db lock
+cp "${profile_db}" "${tmp_places}"
+
+setUrl() {
+	if ! [[ "${2}" == "" ]]; then
+		url="${1}${2}"
+	else
+		exclusive=$(echo "$ENTRIES" | sed 's/[^ ]* //')
+		url="${1}${exclusive}"
+	fi
+}
+
+showNotification() {
+	if ! [[ "${2}" == "" ]]; then
+		notify-send 'Firefox' "Searching in ${1}: ${2}"
+	else
+		notify-send 'Firefox' "Searching in ${1}: ${@}"
+	fi
+}
+
+if [[ -z "$@" ]]; then
+
+ sql="select distinct p.title, p.url \
+        from moz_places as p, moz_historyvisits as h, moz_bookmarks as b \
+        where substr(h.visit_date, 0, 11) >= strftime('%s', date('now') - 30) \
+        and p.id == h.place_id and p.title != '' order by h.visit_date DESC;"
+
+    query=$(sqlite3 "${tmp_places}" "${sql}")
+
+    printf "%s\n" "$query"
+else
+    selected_url=$(echo "$@" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
+
+    if ! [[ -z "$selected_url" ]]; then
+        url=$selected_url
+    else
+        identifier="${@%% *}"
+        search_query="${@#* }"
+
+        case "$identifier" in
+            "archwki" | "aw")
+                showNotification "ArchWiki"
+                setUrl "https://wiki.archlinux.org/index.php?search=" "$search_query"
+                ;;
+            "ultimateguitar" | "ug")
+                showNotification "UltimateGuitar"
+                setUrl "https://www.ultimate-guitar.com/search.php?search_type=title&value=" "$search_query"
+                ;;
+            "youtube" | "yt")
+                showNotification "YouTube"
+                setUrl "https://www.youtube.com/results?search_query=" "$search_query"
+                ;;
+            "github" | "gh")
+                showNotification "Github"
+                setUrl "https://github.com/search?q=" "$search_query"
+                ;;
+            "stackoverflow" | "sof" | "codehelp" | "stackoflow")
+                showNotification "StackOverFlow"
+                setUrl "https://stackoverflow.com/search?q=" "$search_query"
+                ;;
+            "wordpress" | "wp")
+                showNotification "WordPress"
+                setUrl 'https://developer.wordpress.org/?s=' "$search_query"
+                ;;
+            *)
+                if ! [[ "$URL" == http* ]]; then
+                    showNotification "Google"
+                    setUrl "https://www.google.com/search?q=" "${@}"
+                else
+                    notify-send 'Firefox' "Opening: ${URL}"
+                fi
+                ;;
+            esac
+
+    fi
+
+    coproc(firefox "$url")
+
+    exec i3-msg [class="firefox" instance="Navigator"] focus > /dev/null
+
+    exit 0
+fi

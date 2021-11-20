@@ -1,0 +1,7 @@
+#!/bin/bash
+selected_cmd=$(hstr --non-interactive | rofi -dmenu -show drun -p "Execute Command")
+
+
+if ! [[ -z "$selected_cmd" ]]; then
+    terminal --hold -e "$selected_cmd"
+fi

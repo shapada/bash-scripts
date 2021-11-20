@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-selection=$(fasd -a -R | awk '{print $2}' | rofi -dmenu -p "Find")
-
-case "$selection" in
+if ! [[ -z "$@" ]]; then
+	echo "$@"
+	case "$@n" in
 	/home/sd/Code/*  | \
 	/home/sd/local/scripts/* )
 		code "$selection"
@@ -10,4 +10,21 @@ case "$selection" in
 	*)
 		xdg-open "$selection"
 		;;
-esac
+	esac
+
+	exit 0;
+else
+	selection=$(fasd -a -R | awk '{print $2}' | rofi -dmenu -p "Find")
+
+	if ! [[ -z "$selection" ]]; then
+		case "$selection" in
+			/home/sd/Code/*  | \
+			/home/sd/local/scripts/* )
+				code "$selection"
+				;;
+			*)
+				xdg-open "$selection"
+				;;
+		esac
+	fi
+fi

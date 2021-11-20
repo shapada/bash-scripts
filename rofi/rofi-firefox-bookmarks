@@ -9,14 +9,12 @@ TMP_PLACES="/tmp/places"
 
 # Avoid db lock
 cp "${PROFILE_DB}" "${TMP_PLACES}"
-=
 
-read -ra $(sqlite3 "${TMP_PLACES}" "${SQL}" | dmenu -p "Firefox" ) <<< "${ENTRIES}"
-URL="echo ${ADDR} | awk -F: '{print $NF}'"
+read -ra $(sqlite3 "${TMP_PLACES}" "${SQL}" | dmenu -p "Firefox" ) <<< "${selection}"
 
-if [[ ${ADDR[0]} == "" ]]; then
+if [[ -z "$selection"} == "" ]]; then
 	rm "${TMP_PLACES}"
-	exit 0
+	exit 0;
 fi
 
 UURL() {
@@ -54,15 +52,10 @@ case "${ADDR[0]}" in
 	SITE "Github"
 	UURL "https://github.com/search?q="
 	;;
-"gitlab" | "gl")
-	SITE "Gitlab"
-	UURL "https://gitlab.com/search?search="
-	;;
 "stackoverflow" | "sof" | "codehelp" | "stackoflow")
 	SITE "StackOverFlow"
 	UURL "https://stackoverflow.com/search?q="
-	;;
-
+	;
 "wordpress" | "wp")
 	SITE "WordPress"
 	UURL 'https://developer.wordpress.org/?s=';
@@ -70,7 +63,7 @@ case "${ADDR[0]}" in
 *)
 	if ! [[ "$URL" == http* ]]; then
 		SITE "Google"
-		UURL "https://www.google.com/search?q=" "${ENTRIES}"
+		UURL "https://www.google.com/search?q=" "${selection}"
 	else
 		notify-send 'Firefox' "Opening: ${URL}"
 	fi

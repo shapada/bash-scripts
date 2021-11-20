@@ -9,5 +9,5 @@ else
     action='show';
   fi
   xdo $action -n scratchterm
-  exec i3-msg [instance="scratchterm"] focus
+  exec i3-msg [instance="scratchterm"] focus;[inst]
 fi

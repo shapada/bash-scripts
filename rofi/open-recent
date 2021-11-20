@@ -1,13 +1,8 @@
 #!/usr/bin/env zsh
-if [ "$*" = "quit" ]
-then
+if ! [[ -z "$@" ]]; then
+    coproc $( xdg-open "$@" )
     exit 0
-fi
-
-if [[ "$@" ]]; then
-    xdg-open "$@" 2> /dev/null
-    echo 'quit';
 else
-    fasd -t -R | awk '{print $2}'
+    fasd -t -R -e open | awk '{print $2}'
 fi
 
