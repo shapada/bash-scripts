@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 SELECTION=$(rofi -modi 'Clipboard:greenclip print' -show Clipboard -run-command '{cmd}')
-echo $SELECTION
 
 if [ -n "$SELECTION" ]; then
     sleep 0.5

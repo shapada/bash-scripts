@@ -9,7 +9,7 @@ code_folder="Code"
 
 folder_path="$(find $root_path -maxdepth 5 -type d \( ! -regex '.*/\..*' \) | \
              sed 's|^'$root_path/'||' | sort | \
-             rofi -dmenu -l 100 -i $prompt )"
+             rofi -dmenu -l 40 -i $prompt )"
 
 if [[ ! -z $folder_path ]]; then
     if [[ "$folder_path" == "$root_path" ]]; then

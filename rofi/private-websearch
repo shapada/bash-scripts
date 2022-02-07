@@ -8,7 +8,7 @@ yahoo="https://login.yahoo.com/manage_account?activity=mail-direct"
 google="https://google.com/search?q="
 
 
-search_term=$(cat "$SEARCH_HISTORY" | rofi -dmenu -i -p "Search")
+search_term=$(dmenu -p "Private Search")
 
 
 if [ -n "$search_term" ]; then
@@ -18,6 +18,7 @@ if [ -n "$search_term" ]; then
     case "$identifier" in
         (xh)  url="${xhamster}${query}";;
         (ph)  url="${pornhub}${query}";;
+        (xn)  url="${xnxx}${query}";;
         (xv)  url="${xvideos}${query}";;
         (ym)  url="${yahoo}";;
         (*)   url="${google}${query}";;

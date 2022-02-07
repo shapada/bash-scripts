@@ -2,7 +2,7 @@
 
 SQL="SELECT b.title || \" | \" ||  p.url  FROM moz_bookmarks b JOIN moz_places p ON b.fk = p.id WHERE b.fk is not null AND b.title <> '' AND url <> '' AND url NOT LIKE 'place:%'"
 
-FIREFOX_PROFILE="r0c7v8e7.default-release"
+FIREFOX_PROFILE="0wyy0vpt.default-release"
 
 PROFILE_DB="$HOME/.mozilla/firefox/${FIREFOX_PROFILE}/places.sqlite"
 TMP_PLACES="/tmp/places"

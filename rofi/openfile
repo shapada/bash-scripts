@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-xdg-open "$(rg --no-messages --files ~/Documents ~/Code ~/Downloads ~/.config ~/local \
-    -g "!{*.srt,*.rar,*.txt,*.zip,*.nfo,*.git}" | rofi -fullscreen true -width 100 -lines 100 -threads 0 \
+xdg-open "$(rg --no-messages --files ~ \
+    -g "!{.*,*.git}" | rofi \
     -location 2 \
     -dmenu -sort -sorting-method fzf -i -p "Open File" )"

@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-
- terminal -name ranger -e zsh -c 'ranger'
+terminal=${TERMINAL:-$(command -v urxvt)}
+ $terminal -name ranger -e 'ranger'

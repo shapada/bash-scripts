@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+yay -Slq | fzf --multi --preview 'yay -Si {1}' | xargs -ro yay -S
+
+ echo "Done - Press enter to exit" && sleep 5s && exit

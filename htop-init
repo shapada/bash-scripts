@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-eval $(terminal -T "htop" -e "htop")
+terminal=${TERMINAL:-$(command -v urxvt)}
+eval $($terminal -T "htop" -e "htop")

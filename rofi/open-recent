@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 if ! [[ -z "$@" ]]; then
+echo "$@"
     coproc $( xdg-open "$@" )
     exit 0
 else
-    fasd -t -R -e open | awk '{print $2}'
+    sel=$(fasd -t -R -e open | awk '{print $2}' | dmenu -i -l 30 -p "yes")
 fi
-

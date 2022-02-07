@@ -9,5 +9,5 @@ else
     action='show';
   fi
   xdo $action -n scratchterm
-  exec i3-msg [instance="scratchterm"] focus;[inst]
+  exec i3-msg [instance="scratchterm"] focus,  move position 10px 0px, resize set 99ppt 40ppt;
 fi

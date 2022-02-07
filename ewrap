@@ -5,5 +5,5 @@ if [ -n "$TMUX" ] ; then
     tmux split-window -h "vim \"$*\""
 else
     # Remove option --tab for new window
-    terminal --tab -e "vim \"$*\""
+    urxvt -e "vim \"$*\""
 fi
