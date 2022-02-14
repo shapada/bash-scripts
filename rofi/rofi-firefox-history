@@ -37,9 +37,9 @@ if [[ -z "$@" ]]; then
 
 
     history=$(sqlite3 "${tmp_places}" "${sqlHistory}")
-    bookmarks=$(sqlite3 "${tmp_places}" "${sqlBookmarks}")
+   # bookmarks=$(sqlite3 "${tmp_places}" "${sqlBookmarks}")
 
-    printf "%s\n" "$bookmarks" "----------" "$history"
+    printf "%s\n" "$history"
 else
     selected_url=$(echo "$@" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
 
