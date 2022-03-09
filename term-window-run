@@ -2,4 +2,4 @@
 
 terminal=${TERMINAL:-$(command -v urxvt)}
     
-$terminal --hold -name term-window-run -e fish -c "$1"
+$terminal --hold -name termwinrun -e cmd="$1"

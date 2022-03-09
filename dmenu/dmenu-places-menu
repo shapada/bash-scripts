@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# dmenu theming
-. $HOME/.local/bin/dmenu-theming
-
 prompt="-p Path:"
 root_path="$HOME"
 
@@ -10,8 +7,10 @@ find_path="$(find $root_path -maxdepth 3 -type d | \
              sed 's|^'$root_path/'||' | \
              dmenu -i -l 30 $prompt)"
 
+             echo "{$root_path}{$find_path}"
+
 if [[ ! -z "$find_path" ]]; then
-    pcmanfm "$find_path"
+    xdg-open "$find_path"
 fi
 
 exit 0

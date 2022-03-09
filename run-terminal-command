@@ -1,0 +1,5 @@
+#!/bin/sh
+
+terminal=${TERMINAL:-$(command -v urxvt)}
+
+[[ "$1" == '--hold' ]] && echo $@; shift; echo $@; $terminal --hold -name "$1" -e ${@:2} || $terminal --hold -name "$1" -e "${@:2}" || echo $@; $terminal -e $@

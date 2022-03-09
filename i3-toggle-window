@@ -6,8 +6,7 @@
 # EITHER switch focus to the running program matching on $1=$2, OR
 # launch $5 with arguments ${@:6} on workspace $3 and output $4.
 #
-toggle ()
-{
+
     # Attempt to match the running program and obtain its window id.
     case "$1" in
         (instance)        W=$(xdotool search --classname "$2" | head -1) ;;
@@ -16,6 +15,14 @@ toggle ()
         (*)
         W='' ;;
     esac   
+
+    echo $@
+    echo $1
+    echo $2
+    echo $W
+    echo ${*:5}
+
+
     if [ -z "$W" ]; then
         # Launch the program because no matching window id was found.
         if [ $# -ge 5 ]; then
@@ -29,4 +36,3 @@ toggle ()
         cmd="workspace empty; workspace back_and_forth; ${cmd}"
         i3-msg "${cmd}"
     fi
-}

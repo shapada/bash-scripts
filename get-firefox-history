@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+firefox_profile="0wyy0vpt.default-release"
+profile_db="$HOME/.mozilla/firefox/${firefox_profile}/places.sqlite"
+tmp_places="/tmp/places"
+
+# Avoid db lock
+cp "${profile_db}" "${tmp_places}"
+
+sqlHistory="select distinct p.title, p.url \
+    from moz_places as p, moz_historyvisits as h, moz_bookmarks as b \
+    where substr(h.visit_date, 0, 11) >= strftime('%s', date('now') - 30) \
+    and p.id == h.place_id and p.title != '' order by h.visit_date DESC;"
+
+history=$(sqlite3 "${tmp_places}" "${sqlHistory}")
+# bookmarks=$(sqlite3 "${tmp_places}" "${sqlBookmarks}")
+
+printf "%s\n" "${history}"

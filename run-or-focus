@@ -9,10 +9,13 @@ case "$1" in
     "name" )
         count=`xdotool search --limit 1 --name "$2" | wc -l`
         i3wm_criteria="title";;
-esac
+esac 
+echo $1
+echo $2
+ 
 
 if [ "$count" -eq 0 ]; then
-    $2
+    exec $2
 else
     i3-msg "[$i3wm_criteria=\"$2\"] focus"
 fi

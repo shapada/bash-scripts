@@ -1,0 +1,1 @@
+/home/sd/local/development/linux/scripts/rofi/myrmidon/confirm.sh
