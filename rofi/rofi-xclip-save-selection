@@ -3,7 +3,7 @@ clips_dir=~/local/xclips
 
 primary=$(xclip -selection primary -o)
 
-file_name=$( echo "$primary" | rofi -normal-window -dmenu -p "Save As")
+file_name=$( rofi -e "$primary"; rofi -e "$primary" -dmenu -p "Save As")
 
 if [ -n "$file_name" ]; then
     mkdir -p $clips_dir

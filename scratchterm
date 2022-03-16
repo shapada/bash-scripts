@@ -2,13 +2,13 @@
 
 id=$(xdo id -n scratchterm);
 if [ -z "$id" ]; then
-  urxvtc -name scratchterm -e zsh -c "tmux new-session -A -s dummy";
-   exec i3-msg [instance="scratchterm"] move position 10px 0px, resize set 99ppt 60ppt;
+   urxvtc -name scratchterm -e zsh -c "tmux new-session -A -s dummy";
+   exec i3-msg [instance="scratchterm"] move position 20px 20px, resize set 98ppt 50ppt;
 else
   action='hide';
   if [[ $(xprop -id $id | awk '/window state: / {print $3}') == 'Withdrawn' ]]; then
     action='show';
   fi
-  xdo $action -n scratchterm
+  xdo $action -t "$id"
   exec i3-msg [instance="scratchterm"] move scratchpad, scratchpad show, focus
 fi 

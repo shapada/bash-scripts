@@ -2,6 +2,8 @@
 
 id=$(xdo id -n $1);
 
+echo $id
+
 if [ -z "$id" ]; then
 	  urxvtc -name "$id" -e "tmux new-session -A -s dummy";
   else

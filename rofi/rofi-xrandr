@@ -15,97 +15,65 @@ ext=$(xrandr |grep ' 'connected| grep -v primary | head -n 1| cut -d' ' -f1)
 
 
 external_on_top() {
-#cat <<EOF
-#┌────┬──┐
-#│    │  │           External monitor ($ext)
-#├────┘  │           on top of interal monitor ($internal)
-#└───────┘
-#EOF
-cat <<EOF
-┏━━━━┱──┐
-┃    ┃  │           External monitor ($ext)
-┡━━━━┛  │           on top of interal monitor ($internal)
-└───────┘
+cat <<EOF 
+External monitor ($ext) on top of interal monitor ($in
 EOF
 }
 
 external_below() {
 cat <<EOF
-┏━━━━━──┐             External monitor ($ext)
-┃       │             below internal monitor ($internal)
-┃       │
-└───────┘
-┏━━━━┱
-┃    ┃
-┡━━━━┛
+External monitor ($ext) below internal monitor ($internal)
 EOF
 }
 
 external_above() {
 cat <<EOF
-
-┏━━━━┱
-┃    ┃
-┡━━━━┛
-┏━━━━━──┐             External monitor ($ext)
-┃       │             above internal monitor ($internal)
-┃       │
-└───────┘
+External monitor ($ext) above internal monitor ($internal)
 EOF
 }
 
 external_right() {
-#cat <<EOF
-#┌───────┐ ┌────┐
-#│       │ │    │   External monitor ($ext)
-#│       │ └────┘   right of interal monitor ($internal)
-#└───────┘
-#EOF
 cat <<EOF
-┌───────┐ ┏━━━━┓
-│       │ ┃    ┃   External monitor ($ext)
-│       │ ┗━━━━┛   right of interal monitor ($internal)
-└───────┘
+External monitor ($ext) right of interal monitor ($internal)
+EOF
+}
+
+external_below() {
+cat <<EOF
+External monitor ($ext) below internal monitor ($internal)
+EOF
+}sd
+
+external_above() {
+cat <<EOF
+External monitor ($ext) above internal monitor ($internal)
 EOF
 }
 external_left() {
 cat <<EOF
-┏━━━━┓ ┌───────┐
-┃    ┃ │       │   External monitor ($ext)
-┗━━━━┛ │       │   left of interal monitor ($internal)
-       └───────┘
+External monitor ($ext) left of interal monitor ($internal)
 EOF
 }
 external_off() {
 cat <<EOF
-┌───────┐ ╭┄┄┄┄╮
-│       │ ┆    ┆   External monitor ($ext) disabled
-│       │ ╰┄┄┄┄╯
-└───────┘
+External monitor ($ext) disabled
 EOF
 }
 internal_off() {
 cat <<EOF
-╭┄┄┄┄┄┄┄╮ ┏━━━━┓
-┆       ┆ ┃    ┃   External monitor ($ext) enabled
-┆       ┆ ┗━━━━┛   Internal monitor ($internal) disabled.
-╰┄┄┄┄┄┄┄╯
+External monitor ($ext) enabled. Internal monitor ($internal) disabled.
 EOF
 }
 
 
 print_menu() {
-external_off
+external_left
 echo -ne '\0'
 external_right
 echo -ne '\0'
-external_left
-echo -ne '\0'
-external_on_top
-echo -ne '\0'
 external_above
 echo -ne '\0'
-external_below
+external_off
 echo -ne '\0'
 internal_off
 }
@@ -153,24 +121,23 @@ fi
 
 case "$res" in
     0)
-        xrandr --output $ext --off --output $internal --auto --primary
-        enable_screensaver
-        fix_hdmi_audio force-disable
+        xrandr --output $internal --auto --primary --output $ext --auto --left-of $internal
+        disable_screensaver
+        fix_hdmi_audio
         ;;
     1)
         xrandr --output $internal --auto --primary --output $ext --auto --right-of $internal
         disable_screensaver
         fix_hdmi_audio
         ;;
-    2)
-        xrandr --output $internal --auto --primary --output $ext --auto --left-of $internal
+    2)  xrandr --output $internal --auto --primary --output $ext --auto --above $internal
         disable_screensaver
         fix_hdmi_audio
         ;;
     3)
-        xrandr --output $internal --auto --primary --output $ext --auto --pos 0x0
-        disable_screensaver
-        fix_hdmi_audio
+        xrandr --output $ext --off --output $internal --auto --primary
+        enable_screensaver
+        fix_hdmi_audio force-disable
         ;;
     4)
         xrandr --output $ext --auto --output $internal --off
