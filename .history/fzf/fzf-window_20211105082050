@@ -1,5 +1,0 @@
-#!/bin/sh
-
-terminal=${TERMINAL:-/bin/alacritty}
-
-$TERMINAL --hold --class="fzrunner" -e zsh -c $1

@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-rofi -combi-modi window,drun,ssh,cdwindow,"Clipboard:greenclip print" -show combi -sidebar-mode true -icon-theme "Papirus" -show-icons

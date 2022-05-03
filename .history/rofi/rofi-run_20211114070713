@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-rofi -combi-modi window,drun,ssh,cdwindow -show combi -sidebar-mode true -icon-theme "Papirus" -show-icons

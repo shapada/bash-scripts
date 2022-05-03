@@ -1,3 +1,0 @@
-fire#!/usr/bin/env bash
-
- terminal -name ranger -e zsh -c 'ranger'

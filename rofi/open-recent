@@ -4,5 +4,7 @@ echo "$@"
     coproc $( xdg-open "$@" )
     exit 0
 else
-    sel=$(fasd -t -R -e open | awk '{print $2}' | dmenu -i -l 30 -p "yes")
+    sel=$(fasd -t -R | awk '{print $2}' | rofi -dmenu -i -l 30 -p "yes")
+
+    echo $sel
 fi

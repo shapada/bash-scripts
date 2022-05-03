@@ -2,7 +2,7 @@
 
 terminal=${TERMINAL:-$(command -v urxvt)}
 
-$terminal --hold -e "$@"       
+$terminal --hold -e "$@"     
 
 # echo "$terminal $( [[ $hold_flag ]] && echo '--hold' ) -e $@"
 

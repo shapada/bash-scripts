@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-eval $(terminal -T "YAY | Search and Install Packages" -e "htop")

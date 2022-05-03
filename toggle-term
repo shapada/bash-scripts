@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+name="$1"
 id=$(xdo id -n $1);
 
-echo $id
+cmd="move scratchpad"
 
 if [ -z "$id" ]; then
-	  urxvtc -name "$id" -e "tmux new-session -A -s dummy";
+	  $TERMINAL --class "$name" -e "tmux new-session -A -s dummy";
+	  i3-msg ""
   else
 	action='hide';
 
