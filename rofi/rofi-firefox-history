@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-firefox_profile="0wyy0vpt.default-release"
-
-profile_db="$HOME/.mozilla/firefox/${firefox_profile}/places.sqlite"
+places_db=$(find ~/.mozilla -type f -name "places.sqlite")
 tmp_places="/tmp/places"
 
 # Avoid db lock
-cp "${profile_db}" "${tmp_places}"
+cp "${places_db}" "${tmp_places}"
 
 setUrl() {
 	if ! [[ "${2}" == "" ]]; then
@@ -32,14 +30,16 @@ if [[ -z "$@" ]]; then
         where substr(h.visit_date, 0, 11) >= strftime('%s', date('now') - 30) \
         and p.id == h.place_id and p.title != '' order by h.visit_date DESC;"
 
-    sqlBookmarks="SELECT b.title || \" | \" ||  p.url  FROM moz_bookmarks b \
-        JOIN moz_places p ON b.fk = p.id WHERE b.fk is not null AND b.title <> '' AND url <> '' AND url NOT LIKE 'place:%'"
+    # sqlBookmarks="SELECT b.title || \" | \" ||  p.url  FROM moz_bookmarks b \
+    #     JOIN moz_places p ON b.fk = p.id WHERE b.fk is not null AND b.title <> '' AND url <> '' AND url NOT LIKE 'place:%'"
 
 
-    history=$(sqlite3 "${tmp_places}" "${sqlHistory}")
+    history="$(sqlite3 "${tmp_places}" "${sqlHistory}" | awk -F '|' '{print $NF}')"
+
+    echo $history
    # bookmarks=$(sqlite3 "${tmp_places}" "${sqlBookmarks}")
 
-    printf "%s\n" "$history"
+    printf "%s\n" "$history" 
 else
     selected_url=$(echo "$@" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
 
