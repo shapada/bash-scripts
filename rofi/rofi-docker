@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+recent_history=$(fasd -l -t -R)
+
+if [[ -z "$@" ]]; then
+    printf "%s\n" "$( find ~/local/development -maxdepth 4 -type f  -name '*docker-compose*' )"
+else
+
+    selected_path="$@"
+    dir=$(dirname "$selected_path")
+    dcup="$(cd $dir && docker-compose up -d)"
+
+    dunstify "$dcup"
+    exit 0;
+fi

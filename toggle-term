@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-name="$1"
-id=$(xdo id -n $1);
+name="kitty"
+id=$(xdo id -n $1)
 
-cmd="move scratchpad"
+window_instance="[instance=${name}]"
 
 if [ -z "$id" ]; then
-	  $TERMINAL --class "$name" -e "tmux new-session -A -s dummy";
-	  i3-msg ""
+	  "$TERMINAL" --name "$name" --detach --hold -e zsh -ic "tmux new-session -A -s dummy"
+	  cmd="move scratchpad, scratchpad show"
   else
 	action='hide';
 
@@ -16,5 +16,7 @@ if [ -z "$id" ]; then
 	fi
 
 	xdo $action -n "$id"
-	exec i3-msg [instance="$id"] focus;
+	cmd="scratchpad show"
 fi
+
+i3-msg "${window_instance} ${cmd}"

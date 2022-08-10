@@ -1,6 +1,6 @@
 #!/bin/sh
 
-terminal=${TERMINAL:-$(command -v urxvt)}
+terminal=${TERMINAL:-$(command -v kitty)}
 
 $terminal --hold -e "$@"       
 

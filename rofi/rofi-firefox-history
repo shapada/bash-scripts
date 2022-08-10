@@ -2,6 +2,7 @@
 
 places_db=$(find ~/.mozilla -type f -name "places.sqlite")
 tmp_places="/tmp/places"
+history_cache=$HOME/local/tmp/.ff_history
 
 # Avoid db lock
 cp "${places_db}" "${tmp_places}"
@@ -23,23 +24,22 @@ showNotification() {
 	fi
 }
 
-if [[ -z "$@" ]]; then
-
-    sqlHistory="select distinct p.title, p.url \
+generate_history_cache() {
+     sql_query="select distinct p.title, p.url \
         from moz_places as p, moz_historyvisits as h, moz_bookmarks as b \
         where substr(h.visit_date, 0, 11) >= strftime('%s', date('now') - 30) \
         and p.id == h.place_id and p.title != '' order by h.visit_date DESC;"
 
-    # sqlBookmarks="SELECT b.title || \" | \" ||  p.url  FROM moz_bookmarks b \
-    #     JOIN moz_places p ON b.fk = p.id WHERE b.fk is not null AND b.title <> '' AND url <> '' AND url NOT LIKE 'place:%'"
+        sqlite3 "${tmp_places}" "${sql_query}" | awk -F '|' '{print $NF}' | tee $history_cache
+}
 
+if [[ -z "$@" ]]; then
 
-    history="$(sqlite3 "${tmp_places}" "${sqlHistory}" | awk -F '|' '{print $NF}')"
-
-    echo $history
-   # bookmarks=$(sqlite3 "${tmp_places}" "${sqlBookmarks}")
-
-    printf "%s\n" "$history" 
+    if ! [[ -f "$history_cache" ]]; then
+        generate_history_cache
+    fi
+        
+    printf "%s\n" $( cat $history_cache )
 else
     selected_url=$(echo "$@" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
 
@@ -86,9 +86,8 @@ else
 
     fi
 
-    coproc(firefox "$url")
+    coproc(firefox "$url") > /dev/null
 
     exec i3-msg [class="firefox" instance="Navigator"] focus > /dev/null
-
-    exit 0
+    exit 0;
 fi

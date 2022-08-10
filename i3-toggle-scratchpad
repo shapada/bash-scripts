@@ -8,7 +8,10 @@
 #
 
 # Attempt to match the running program and obtain its window id.
-case "$1" in
+$name='kitty'
+$app="${@:2}"
+
+case "$name" in
     (instance)        W=$(xdotool search --classname "$2" | head -1) ;;
     (class)           W=$(xdotool search --class "$2" | head -1)  ;;
     (title)           W=$(xdotool search --name "$2" | head -1) ;;
@@ -16,17 +19,12 @@ case "$1" in
     W='' ;;
 esac   
 
-cmd="[class=(?i)${2// /\\x20}] move scratchpad"
+cmd="[class=(?i)${2// /\\x20}] scratchpad show"
  
 if [ -z "$W" ]; then
     # Launch the program because no matching window id was found.
-    exec "${@:2}"
-else
-    # Focus the window.
-    # Escape any whitespace to suit 'i3-msg'.
-    #cmd="[$1=${2// /\\x20}] focus"
-
-    cmd="${cmd}"
+    exec "${app}"
+    i3-msg "mark ${name}, move scratchpad"
 fi
 
 i3-msg "${cmd}"

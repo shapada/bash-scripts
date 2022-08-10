@@ -7,7 +7,7 @@ prompt="-p Folder"
 
 code_folder="Code"
 
-folder_path="$(find $root_path -maxdepth 5 -type d \( ! -regex '.*/\..*' \) | \
+folder_path="$(find ${HOME}/local/development/web -maxdepth 5 -type d \( ! -regex '.*/**/\..*' \) \( ! -regex '.*/node_modules*' \) | \
              sed 's|^'$root_path/'||' | sort | \
              rofi -dmenu -l 40 -i $prompt )"
 

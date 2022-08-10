@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
+   
+id=$(xdotool search --classname "scratchterm")
 
-name="$1"
-id=$(xdo id -n "$name");
-
-cmd="[instance=${name}] move scratchpad"
 if [ -z "$id" ]; then
-   alacritty --class "scratchterm" -e zsh -c "tmux new-session -A -s dummy";
-   cmd="${cmd}, scratchpad show"
+   urxvt -name scratchterm -e zsh -c "tmux new-session -A -s dummy"
+   exec i3-msg [instance="scratchterm"] move to scratchpad, move to position 20px 20px, resize set 98ppt 50ppt
 else
+  action='hide';
+
   if [[ $(xprop -id $id | awk '/window state: / {print $3}') == 'Withdrawn' ]]; then
-    cmd="${cmd}, scratchpad show"
+    action='show';
   fi
-fi  
-exec i3-msg "$cmd"
+
+  xdo $action -t "$id"
+fi
+
+exec i3-msg [instance="scratchterm"] scratchpad show

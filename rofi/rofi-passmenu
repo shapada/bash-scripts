@@ -17,7 +17,7 @@ password_files=( "${password_files[@]%.gpg}" )
 
 # shows a list of all password files and saved the selected one in a variable
 #password=$(printf '%s\n' "${password_files[@]}" | rofi -dmenu "$@" -theme ~/dotfiles/i3/rofi.rasi)
-password=$(printf '%s\n' "${password_files[@]}" | rofi -dmenu "$@")
+password=$(printf '%s\n' "${password_files[@]}" | rofi -dmenu -p "Pass" "$@")
 [[ -n $password ]] || exit
 
 

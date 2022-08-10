@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-recent_history=$(fasd -l -t -R)
+recent_history=$(fasd -R -l)
 
 if [[ -z "$@" ]]; then
     printf "%s\n" "$recent_history"
@@ -7,8 +7,12 @@ else
 
     selected_path="$@"
 
-    if [[ "$selected_path" == *development* || "$selected_path" == *.config* ]]; then
-        cmd="code \"$selected_path\"" 
+    if [[ \
+        "$selected_path" == *local* || \
+        "$selected_path" == *.config* ||\
+        "$selected_path" == *dotfiles* \
+    ]]; then
+        cmd="code \"$selected_path\""
     else
         cmd="xdg-open \"$selected_path\""
     fi

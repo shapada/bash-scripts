@@ -1,9 +1,5 @@
 #!/bin/sh
 
 terminal=${TERMINAL:-$(command -v urxvt)}
-
-$terminal --hold -e "$@"     
-
-# echo "$terminal $( [[ $hold_flag ]] && echo '--hold' ) -e $@"
-
-# $terminal $( [[ $hold_flag ]] && echo '--hold' ) -e $@
+cmd=$@
+eval $terminal --hold -e zsh -ic $cmd

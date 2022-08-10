@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+recent_history=$(fasd -l -r -R)
+
+if [[ -z "$@" ]]; then
+    printf "%s\n" "$recent_history"
+else
+
+    selected_path="$@"
+
+    if [[ \
+        "$selected_path" == *local* || \
+        "$selected_path" == *.config* ||\
+        "$selected_path" == *dotfiles* \
+    ]]; then
+        cmd="code \"$selected_path\""
+    else
+        cmd="xdg-open \"$selected_path\""
+    fi
+
+    coproc eval "$cmd" > /dev/null
+    fasd -A "$selected_path"
+fi

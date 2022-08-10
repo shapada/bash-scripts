@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ -z "$@" ]]; then
+    manuals="$(man -k .)"
+    printf "%s\n" "$manuals"
+else
+
+    man="$@"
+
+    echo $man
+
+    coproc $(~/bin/run-shell-command --detatch --hold 'man "{$man}"')
+
+    exit 0
+fi

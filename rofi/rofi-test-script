@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ x"$@" = x"quit" ]
+then
+    exit 0
+fi
+
+results=$(eval ~/bin/i3-get-window-criteria) 
+
+rofi -e "$results"

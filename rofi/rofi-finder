@@ -1,42 +1,59 @@
 #!/bin/bash
 # A fuzzy file-finder and opener based on rofi 
 # Requires: rofi, xdg-utils, nerdfonts 
-files=/tmp/.file_list
+files=$HOME/local/tmp/.file_list
 
 update_list() {
-	find $HOME -type d -not -path '*/\.*' 2> /dev/null | sed -e 's/^\./  /g' > /tmp/.file_list
-	find $HOME -not -type d 2> /dev/null | sed -E -e '/png$|jpg$|tiff$|gif$|jpeg$|bmp$/ s/^\./  /g' -e '/mp3$|pcm$|wav$|aac$|ogg$|wma$/ s/^\./  /g' -e '/wmv$|webm$|m4v$|mkv$|mov$|flv$|avi$|mp4$/ s/^\./辶  /g' -e 's/^\./  /g' >> /tmp/.file_list
-	find .config 2> /dev/null | sed -E -e 's/^\./:~\/./g' >> /tmp/.file_list
+	find $HOME -type d -not -path '**/*/\.*' -not -path '*/go/*' -not -path '*/node_modules*' -not -path '*/vendor*' 2> /dev/null | sed -e 's/^\./  /g' > $files
+	find $HOME -not -type d 2> /dev/null | sed -E -e '/png$|jpg$|tiff$|gif$|jpeg$|bmp$/ s/^\./  /g' -e '/mp3$|pcm$|wav$|aac$|ogg$|wma$/ s/^\./  /g' -e '/wmv$|webm$|m4v$|mkv$|mov$|flv$|avi$|mp4$/ s/^\./辶  /g' -e 's/^\./  /g' >> $files
+	find .config 2> /dev/null | sed -E -e 's/^\./:~\/./g' >> $HOME/local/tmp/.file_list
 }
 
-if [ -e $files ]; then
-	# File list exist, use it
-	input=$(cat $files | rofi -dmenu -p ' Find')
+if ! [ -e $files ]; then
 	# Update the list on the background
-	update_list 
-else
-	# There is no file list, create it and show menu only after that
 	update_list
-	input=$(cat $files | rofi -dmenu -p '')
 fi
 
-	identifier=$(echo $input | cut -d " " -f 1)
-	selection=$(echo $input | cut -d " " -f2-)
+input=$( cat "$files" | rofi -dmenu -p ' Find')
+input_count=$(echo $input | wc --words)
 
-	echo $identifier
-	echo $seledtion
-	
+if [[ "$input_count" -gt 1 ]]; then
+
+	identifier=$(echo $input | cut -d " " -f 1)
+	search_query=$(echo $input | cut -d " " -f2-)
+
+	declare url=''
 	case "$identifier" in
-		a)
-			selection=https://wiki.archlinux.org/index.php?search="$selection"			#exec $BROWSER https://wiki.archlinux.org/index.php?search="$selection" &> /dev/null &
+		aw)
+			url="https://wiki.archlinux.org/index.php?search=${search_query}"
 			;;
-		g)
-			selection=https://google.com/search?q="$selection"
+		ug)
+			url="https://www.ultimate-guitar.com/search.php?search_type=title&value=${search_query}"
 			;;
-		u)
-			selection=https://www.ultimate-guitar.com/search.php?search_type=title&value="$selection"
+		yt)
+			url="https://www.youtube.com/results?search_query=${search_query}"
+			;;
+		*)
+			url="https://www.google.com/search?q=${input}"
 			;;
 	esac
 
-	echo
-				exec xdg-open "$selection" &> /dev/null
+	cmd="xdg-open \"${url}\""
+else
+    if [[ \
+        "$input" == *local* || \
+        "$input" == *.config* ||\
+        "$input" == *dotfiles* \
+    ]]; then
+        cmd="code \"$input\""
+    else
+        cmd="xdg-open \"$input\""
+    fi
+
+    fasd -A "$input"
+fi
+
+coproc( eval "$cmd" ) > /dev/null
+
+update_list
+exit 0

@@ -1,16 +1,21 @@
 #!/bin/bash
+tmp_places=$HOME/local/tmp/places
+history_cache=/tmp/.ff_history
 
-SQL="SELECT b.title || \" | \" ||  p.url  FROM moz_bookmarks b JOIN moz_places p ON b.fk = p.id WHERE b.fk is not null AND b.title <> '' AND url <> '' AND url NOT LIKE 'place:%'"
+update_bookmark_cache() {
+	places_db=$(find ~/.mozilla -type f -name "places.sqlite")
 
-FIREFOX_PROFILE="0wyy0vpt.default-release"
+	cp "${places_db}" "${tmp_places}"
 
-PROFILE_DB="$HOME/.mozilla/firefox/${FIREFOX_PROFILE}/places.sqlite"
-TMP_PLACES="/tmp/places"
+	sql_query="SELECT b.title || \" | \" ||  p.url  FROM moz_bookmarks b JOIN moz_places p ON b.fk = p.id WHERE b.fk is not null AND b.title <> '' AND url <> '' AND url NOT LIKE 'place:%'"
+
+}
+
 
 # Avoid db lock
 cp "${PROFILE_DB}" "${TMP_PLACES}"
 
-read -ra $(sqlite3 "${TMP_PLACES}" "${SQL}" | dmenu -p "Firefox" ) <<< "${selection}"
+read -ra selection <<< $(sqlite3 "${TMP_PLACES}" "${SQL}" | dmenu -p "Firefox" )
 
 if [[ -z "$selection"} == "" ]]; then
 	rm "${TMP_PLACES}"
