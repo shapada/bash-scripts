@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [[ -z "$*" ]]; then
+    declare scripts
+
+    scripts=$(find ~/local/development/scripts/ -type f)
+
+    printf "%s\n" "$scripts"
+else
+    declare selected_file
+    declare local_bin
+    
+    selected_file="$*"
+    local_bin="$HOME/bin/"
+
+    ln -s "$selected_file" "$local_bin"
+
+    # coproc("$input") >  /dev/null
+
+    # exec i3-msg [class="" instance=""] focus > /dev/null
+fi

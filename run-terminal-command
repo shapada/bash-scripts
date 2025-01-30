@@ -1,9 +1,21 @@
 #!/bin/sh
 
-terminal=${TERMINAL:-$(command -v kitty)}
+name="$1"
+app="${@:2}"
 
-$terminal --hold -e "$@"       
+case "$name" in
+    (instance)        W=$(xdotool search --classname "$2" | head -1) ;;
+    (class)           W=$(xdotool search --class "$2" | head -1)  ;;
+    (title)           W=$(xdotool search --name "$2" | head -1) ;;
+    (*)
+    W='' ;;
+esac 
 
-# echo "$terminal $( [[ $hold_flag ]] && echo '--hold' ) -e $@"
+echo $W
 
-# $terminal $( [[ $hold_flag ]] && echo '--hold' ) -e $@
+cmd="[class=(?i)${2// /\\x20}] scratchpad show"
+
+window_instance="[instance=${name}]"
+cmd="${@:2}"
+
+eval $TERMINAL --class $name --title $name --hold --command $cmd

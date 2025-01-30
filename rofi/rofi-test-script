@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ x"$@" = x"quit" ]
+if [ "$@" = x"quit" ]
 then
     exit 0
 fi

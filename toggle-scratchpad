@@ -16,8 +16,7 @@
         W='' ;;
     esac  
 
-	echo $W
-
+echo "$W"
 
     if [ -z "$W" ]; then
         # Launch the program because no matching window id was found.

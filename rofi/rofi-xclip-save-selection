@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-clips_dir=~/local/xclips
+clips_dir=$HOME/xclips
 
 primary=$(xclip -selection primary -o)
 
 file_name=$( rofi -e "$primary"; rofi -e "$primary" -dmenu -p "Save As")
-
+echo $file_name
 if [ -n "$file_name" ]; then
     mkdir -p $clips_dir
 
+    echo "${clips_dir}/${file_name}"
     xclip -selection primary -o > "${clips_dir}/${file_name}"
 fi

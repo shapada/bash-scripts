@@ -1,28 +1,44 @@
 #!/bin/bash
-# A fuzzy file-finder and opener based on rofi 
-# Requires: rofi, xdg-utils, nerdfonts 
-files=$HOME/local/tmp/.file_list
+
+declare files
+files=$HOME/local/cache/file-list.txt
 
 update_list() {
-	find $HOME -type d -not -path '**/*/\.*' -not -path '*/go/*' -not -path '*/node_modules*' -not -path '*/vendor*' 2> /dev/null | sed -e 's/^\./  /g' > $files
-	find $HOME -not -type d 2> /dev/null | sed -E -e '/png$|jpg$|tiff$|gif$|jpeg$|bmp$/ s/^\./  /g' -e '/mp3$|pcm$|wav$|aac$|ogg$|wma$/ s/^\./  /g' -e '/wmv$|webm$|m4v$|mkv$|mov$|flv$|avi$|mp4$/ s/^\./辶  /g' -e 's/^\./  /g' >> $files
-	find .config 2> /dev/null | sed -E -e 's/^\./:~\/./g' >> $HOME/local/tmp/.file_list
+	whitelist="-not -path '**/\.*' -not -path '*/go/*' -not -path '*/node_modules*' -not -path '*/vendor*' -not -path '*/db_data*' -not -path '*/.*'"
+
+	find "$HOME" -type d "$whitelist" -printf "%T@ %Tc %p\n" 2> /dev/null | sort -u > "$files"
+	
+	find "$HOME" -not -type d  "$whitelist" -printf "%T@ %Tc %p\n" 2> /dev/null | sed -E -e '/png$|jpg$|tiff$|gif$|jpeg$|bmp$/ s/^\./  /g' -e '/mp3$|pcm$|wav$|aac$|ogg$|wma$/ s/^\./  /g' -e '/wmv$|webm$|m4v$|mkv$|mov$|flv$|avi$|mp4$/ s/^\./辶  /g' -e 's/^\./  /g' >> "$files"
+	find .config 2> /dev/null | sed -E -e 's/^\./:~\/./g' >> "$files"
+	# find .config 2> /dev/null | sed -E -e 's/^\./:~\/./g' >> $HOME/local/tmp/.file_list
 }
 
-if ! [ -e $files ]; then
-	# Update the list on the background
-	update_list
+if [[ ! -f "$files" ]]; then
+	touch "$files"
+	eval update_list
+elif [[ ! -e "$files" ]]; then
+	eval update_list
 fi
 
-input=$( cat "$files" | rofi -dmenu -p ' Find')
-input_count=$(echo $input | wc --words)
 
-if [[ "$input_count" -gt 1 ]]; then
+# if ! [ -e $files ]; then
+# 	eval update_list
+# fi
 
-	identifier=$(echo $input | cut -d " " -f 1)
-	search_query=$(echo $input | cut -d " " -f2-)
+declare input
+declare input_count
+
+input=$( awk -f "$files" FS=' ' '{print $7}' | rofi -dmenu -p 'Find')
+
+if [[ -z "$@" ]]; then
+    printf "%s\n" "$recent_history"
+else
+
+	identifier=$(echo "$input" | cut -d " " -f 1)
+	search_query=$(echo "$input" | cut -d " " -f2-)
 
 	declare url=''
+
 	case "$identifier" in
 		aw)
 			url="https://wiki.archlinux.org/index.php?search=${search_query}"
@@ -39,21 +55,9 @@ if [[ "$input_count" -gt 1 ]]; then
 	esac
 
 	cmd="xdg-open \"${url}\""
-else
-    if [[ \
-        "$input" == *local* || \
-        "$input" == *.config* ||\
-        "$input" == *dotfiles* \
-    ]]; then
-        cmd="code \"$input\""
-    else
-        cmd="xdg-open \"$input\""
-    fi
-
-    fasd -A "$input"
 fi
 
-coproc( eval "$cmd" ) > /dev/null
+coproc eval "$cmd" > /dev/null
 
 update_list
 exit 0

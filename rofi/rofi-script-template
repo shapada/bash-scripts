@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+cache=$HOME/local/tmp
+
+build_cache() {
+}
+
+if [[ -z "$@" ]]; then
+
+    if ! [[ -f "$cache" ]]; then
+        build_cache
+    fi
+        
+else
+    input="$@"
+
+    if ! [[ -z "$input" ]]; then
+    else
+
+    fi
+
+    coproc("$input") >  /dev/null
+
+    exec i3-msg [class="" instance=""] focus > /dev/null
+    exit 0;
+fi

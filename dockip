@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Only need to set "CONTAINERNAME" variable with an arbitrary
+# string found in either the Container ID or Image Name and
+# it prints container IP. Ensure the string is unique to desired host
+
+CONTAINERNAME='mariadb-blog'
+CONTAINERID="$(docker ps | grep -i $CONTAINERNAME | awk '{print $1}')"
+CONTAINERIP="$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINERID)"
+
+echo "$CONTAINERIP"

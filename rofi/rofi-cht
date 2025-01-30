@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [[ -z "$@" ]]; then
+
+    echo "Find Cheatsheet:"
+
+    # if ! [[ -f "$cache" ]]; then
+    #     build_cache
+    # fi
+        
+else
+    input="$@"
+
+    cheat=$(cht.sh "${input}")
+    urxvt --hold -n "scratchterm" -e zsh -c 'printf "%s" "$cheat"'
+    
+    #coproc("$input") >  /dev/null
+
+    exec i3-msg [instance="scratchterm"] focus
+    exit 0;
+fi

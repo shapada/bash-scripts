@@ -1,4 +1,5 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
+
 if ! [[ -z "$@" ]]; then
 echo "$@"
     coproc $( xdg-open "$@" )

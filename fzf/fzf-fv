@@ -56,7 +56,12 @@ has() {
   verbose=0
   while getopts 'v' o; do
     case "$o" in
-noand -v "$c" &> /dev/null; then
+      v) v=1 ;;
+    esac
+  done
+  shift "$((OPTIND-1))"
+  for c; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
       (( verbose > 0 )) && err "$c not found"
       return 1
     fi
@@ -82,7 +87,7 @@ select_from() {
 }
 
 while getopts 'ac:dhlos' opt; do
-  case "$opt" in  h
+  case "$opt" in
     a) allfiles=1 ;;
     c) cmd="$OPTARG" ;;
     d) dtach=1 ;;

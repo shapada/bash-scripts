@@ -3,8 +3,7 @@
 app="$1"
 window_criteria="(?i)$app"
 
-pid=$(`ps -C $app -o pid=`);
+#pid=$(`ps -C $app -o pid=`);
+[[ "$(xdotool search --limit 1 --any --class --classname --role $app )" -eq 0  ]] && coproc eval $app
 
-[[ "$(xdotool search --limit 1 --any --class --classname --role $app )" -eq 0  ]] && exec "$app"  
-
-i3-msg "[class=\"$window_criteria\"] focus; [instance=\"$window_criteria\"] focus"
+i3-msg "[class=\"$window_criteria\"] focus; [instance=\"$window_criteria\"] focus;";

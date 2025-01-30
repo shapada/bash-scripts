@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-id=$(xdo id -n scratchterm)
-name="scratchterm"
+name="$1"
+id=$(xdo id -n "$name")
+
+echo "$id"
 
 window_instance="[instance=${name}]"
 
 if [ -z "$id" ]; then
-	  alacritty --class $name --title $name --hold --command zsh -ic "tmux new-session -A -s dummy"
+	  alacritty --class $name -e zsh -ic "tmux new-session -A -s dummy"
 	  cmd="move scratchpad, scratchpad show"
 else
 	action='hide';
@@ -16,6 +18,7 @@ else
 	fi
 
 	xdo $action -n "$id"
+
 	cmd="scratchpad show"
 fi
 

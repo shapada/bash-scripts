@@ -6,7 +6,7 @@ ULTIMATE_GUTIAR="https://www.ultimate-guitar.com/search.php?search_type=title&va
 JQUERY="https://api.jquery.com/?s="
 
 SEARCH_HISTORY="$HOME/.cache/dmenu-websearch.history"
-echo $SEARCH_HISTORY
+
 INPUT=$(tac "$SEARCH_HISTORY" | rofi -dmenu -i -l 10 -p "Search")
 
 if [ -n "$INPUT" ]; then
@@ -20,7 +20,6 @@ if [ -n "$INPUT" ]; then
         (aw)  URL="${ARCH_WIKI}${QUERY}";;
         (gg)  URL="${GOOGLE}${QUERY}";;
         (jq)  URL="${JQUERY}${QUERY}";;
-        (ph)  URL="${PORNHUB}${QUERY}";;
         (ug)  URL="${ULTIMATE_GUTIAR}${QUERY}";;
         (*)   URL="${GOOGLE}${INPUT}";;
     esac

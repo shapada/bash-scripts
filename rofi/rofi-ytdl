@@ -4,6 +4,8 @@ url=$(rofi -dmenu -p "Video URL")
 
 if [ -n "$url" ]; then
     ytdl_dir=$HOME/Videos/ytdl/
+
+    echo "$url" >> $HOME/local/tmp/ytdl.txt
     
     youtube-dl -i -o "${HOME}/local/ytdl/%(title)s.%(ext)s" "$url"
 fi

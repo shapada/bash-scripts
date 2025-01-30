@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-places_db=$(find ~/.mozilla -type f -name "places.sqlite")
-tmp_places="/tmp/places"
-history_cache=$HOME/local/tmp/.ff_history
+#places_db=$(find ~/.mozilla -type f -name "places.sqlite")
+places_db=$(find ~/.mozilla -type f -name "places.sqlite" | sed 1q)
+places_db_backup="$HOME/tmp/places.sqlite"
+history_cache=$HOME/tmp/firefox_history.txt
 
 # Avoid db lock
-cp "${places_db}" "${tmp_places}"
+cp "$places_db" "$places_db_backup"
 
 setUrl() {
 	if ! [[ "${2}" == "" ]]; then
@@ -29,16 +30,15 @@ generate_history_cache() {
         from moz_places as p, moz_historyvisits as h, moz_bookmarks as b \
         where substr(h.visit_date, 0, 11) >= strftime('%s', date('now') - 30) \
         and p.id == h.place_id and p.title != '' order by h.visit_date DESC;"
-
-        sqlite3 "${tmp_places}" "${sql_query}" | awk -F '|' '{print $NF}' | tee $history_cache
+        
+        sqlite3 "${places_db_backup}" "${sql_query}" | awk -F '|' '{print $NF}' | tee "${history_cache}"
 }
 
 if [[ -z "$@" ]]; then
+    if [[ ! -e $history_cache ]]; then touch "$history_cache"; fi
 
-    if ! [[ -f "$history_cache" ]]; then
-        generate_history_cache
-    fi
-        
+    generate_history_cache
+
     printf "%s\n" $( cat $history_cache )
 else
     selected_url=$(echo "$@" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")

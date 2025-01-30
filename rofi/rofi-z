@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-recent_history=$(fasd -l -r -R)
+recent_history=$(fasd -l -R -t -a)
 
 if [[ -z "$@" ]]; then
     printf "%s\n" "$recent_history"
@@ -7,7 +7,7 @@ else
 
     selected_path="$@"
 
-    if [[ \
+    if [[ -f "$selected_path" || \
         "$selected_path" == *local* || \
         "$selected_path" == *.config* ||\
         "$selected_path" == *dotfiles* \

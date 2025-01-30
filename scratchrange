@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+id=$(xdo id -n scranger)
+name="scranger"
+window_instance="[instance=${name}]"
+
+if [ -z "$id" ]; then
+	alacritty --class "$name" --title  "$name" --hold -e zsh -ic "tmux new-window ranger"
+    cmd="move scratchpad, scratchpad show"
+else
+	action='hide';
+
+	if [[ $(xprop -id $id | awk '/window state: / {print $3}') == 'Withdrawn' ]]; then
+		action='show';
+	fi
+
+	xdo $action -n "$id"
+	cmd="scratchpad show, focus;"
+fi
+
+
+i3-msg "${window_instance} ${cmd}";
+
+# i3-msg "[class=\"$window_criteria\"] focus; [instance=\"$window_criteria\"] focus;";
+
+# i3-msg "${window_instance} ${cmd}"

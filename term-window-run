@@ -1,5 +1,0 @@
-#!/bin/sh
-
-terminal=${TERMINAL:-$(command -v urxvt)}
-    
-$terminal --hold -name termwinrun -e cmd="$1"

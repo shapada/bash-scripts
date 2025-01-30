@@ -1,5 +1,0 @@
-#!/bin/sh
-
-terminal=${TERMINAL:-$(command -v urxvt)}
-cmd=$@
-eval $terminal --hold -e zsh -ic $cmd

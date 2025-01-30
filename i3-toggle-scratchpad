@@ -8,8 +8,8 @@
 #
 
 # Attempt to match the running program and obtain its window id.
-$name='kitty'
-$app="${@:2}"
+name='urxvt'
+app="${@:2}"
 
 case "$name" in
     (instance)        W=$(xdotool search --classname "$2" | head -1) ;;
@@ -23,7 +23,7 @@ cmd="[class=(?i)${2// /\\x20}] scratchpad show"
  
 if [ -z "$W" ]; then
     # Launch the program because no matching window id was found.
-    exec "${app}"
+    exec "$app"
     i3-msg "mark ${name}, move scratchpad"
 fi
 

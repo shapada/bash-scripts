@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-firefox_profile="0wyy0vpt.default-release"
-profile_db="$HOME/.mozilla/firefox/${firefox_profile}/places.sqlite"
+# firefox_profile="0wyy0vpt.default-release"
+
+profile_db=$(find "$HOME"/.mozilla/firefox/ -type d -name "*dev-edition*")
 tmp_places="/tmp/places"
 
 # Avoid db lock

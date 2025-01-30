@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-mount_point=~/local/media/iphone
-mkdir -p $mount_point
-idevicepair pair
-ifuse $mount_point

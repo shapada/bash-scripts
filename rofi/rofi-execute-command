@@ -3,5 +3,5 @@ selected_cmd=$(hstr --non-interactive | rofi -dmenu -show drun -p "Execute Comma
 
 
 if ! [[ -z "$selected_cmd" ]]; then
-    terminal --hold -e "$selected_cmd"
+    $TERMINAL --hold -e "$selected_cmd"
 fi

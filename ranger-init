@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-terminal=${TERMINAL:-$(command -v urxvt)}
- $terminal -name ranger -e 'ranger'
